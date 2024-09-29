@@ -12,7 +12,9 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // Allows all methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allows common headers
   }));
-
+  app.get('/health', (req, res) => {
+    res.status(200).send('OK');
+});
 
 configureRoutes(app);
 connectDatabase(); 
