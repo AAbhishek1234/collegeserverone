@@ -17,30 +17,19 @@
 //     });
 // };
 
-import mongoose from "mongoose";
-import dotenv from "dotenv"; // Import dotenv using ES module syntax
-
-dotenv.config(); // Load environment variables
-
-const mongoUrl = process.env.DB_URI || "mongodb://127.0.0.1:27017/clg";
+import mongoose from 'mongoose';
+const mongoUrl = process.env.DB_URI; // Ensure this points to your cloud database URI
 
 export const connectDatabase = () => {
-  if (!mongoUrl) {
-    return console.log("Mongo URI not provided!");
-  }
+    if (!mongoUrl) {
+        return console.log("Mongo URI not provided!");
+    }
 
-  console.log("Using Mongo URI:", mongoUrl); // Debugging log
-
-  mongoose
-    .connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => {
-      console.log("Connected to MongoDB!!!!!");
-    })
-    .catch((error) => {
-      console.error("Connection error", error);
-    });
+    mongoose.connect(mongoUrl)
+        .then(() => {
+            console.log("Connected to MongoDB!");
+        })
+        .catch((error) => {
+            console.error("Connection error", error);
+        });
 };
-
-// Call the function to connect to the database
-connectDatabase();
-
