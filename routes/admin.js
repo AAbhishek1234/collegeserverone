@@ -10,7 +10,7 @@ const router = express.Router();
 router.post('/register', registerAdmin);
 
 // Admin Login
-router.post('/login', loginAdmin);
+router.get('/login', loginAdmin);
 
 // Secure Route to Get All Students (Requires JWT authentication)
 router.get('/students', verifyToken, getAllStudent);
