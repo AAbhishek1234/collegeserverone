@@ -129,26 +129,26 @@ export const registerAdmin = async (req, res) => {
 // Admin Login
 export const loginAdmin = async (req, res) => {
     const { email, password } = req.body;
+    console.log('Request data:', { email, password });  // Log incoming request
 
     try {
-        // Check if the admin exists
         const admin = await Admin.findOne({ email });
         if (!admin) {
+            console.error('Admin not found:', email);
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        // Compare the plain text password with the hashed password in the database
         const isMatch = await bcrypt.compare(password, admin.password);
         if (!isMatch) {
+            console.error('Password mismatch:', email);
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        // Generate a JWT token if password matches
         const token = jwt.sign({ email: admin.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
-
+        console.log('Token generated for:', email);
         return res.json({ token });
     } catch (error) {
         console.error('Error during login:', error);
-        return res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 };
