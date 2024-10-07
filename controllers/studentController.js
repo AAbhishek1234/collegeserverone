@@ -47,14 +47,19 @@ export const getAllStudent = async (req, res) => {
             return res.status(404).json({ message: 'No students found' });
         }
         const studentsWithFormattedDate = students.map(student => {
-            const formattedDate = moment(student.createdAt).format('dddd, MMMM Do YYYY, h:mm:ss A');
+            // Log the original createdAt date for debugging
+            console.log("Original createdAt:", student.createdAt);
+            // Format with consideration of UTC
+            const formattedDate = moment.utc(student.createdAt).local().format('dddd, MMMM Do YYYY, h:mm:ss A');
             return {
                 ...student._doc, // Spread the existing student data
                 createdAt: formattedDate // Overwrite 'createdAt' with formatted date
             };
         });
+
+        // Send the updated student data
         res.status(200).json(studentsWithFormattedDate);
-    } catch (error) {
+    }catch (error) {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
