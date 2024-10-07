@@ -1,6 +1,6 @@
 
 import Student from "../models/Student.js";
-
+import moment from 'moment'
 export const createStudent = async (req, res) => {
     try {
         const { name, email, location, phoneno } = req.body;
@@ -46,6 +46,13 @@ export const getAllStudent = async (req, res) => {
         if (!students || students.length === 0) {
             return res.status(404).json({ message: 'No students found' });
         }
+        const studentsWithFormattedDate = students.map(student => {
+            const formattedDate = moment(student.createdAt).format('dddd, MMMM Do YYYY, h:mm:ss A');
+            return {
+                ...student._doc, // Spread the existing student data
+                createdAt: formattedDate // Overwrite 'createdAt' with formatted date
+            };
+        });
         res.status(200).json(students);
     } catch (error) {
         res.status(500).json({ message: 'Internal server error' });
