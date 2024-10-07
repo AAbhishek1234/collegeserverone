@@ -53,7 +53,7 @@ export const getAllStudent = async (req, res) => {
                 createdAt: formattedDate // Overwrite 'createdAt' with formatted date
             };
         });
-        res.status(200).json(students);
+        res.status(200).json(studentsWithFormattedDate);
     } catch (error) {
         res.status(500).json({ message: 'Internal server error' });
     }
