@@ -1,17 +1,16 @@
 
 import Student from "../models/Student.js";
 import moment from 'moment'
+
 export const createStudent = async (req, res) => {
     try {
         const { name, email, location, phoneno } = req.body;
 
-        // Check if the student with the provided email already exists
         const existingStudent = await Student.findOne({ email });
         if (existingStudent) {
             return res.status(400).json({ message: "This email already exists." });
         }
 
-        // Create a new student instance
         const newStudent = new Student({
             name,
             email,
@@ -19,12 +18,11 @@ export const createStudent = async (req, res) => {
             phoneno
         });
 
-        // Save the student to the database
         const savedStudent = await newStudent.save();
         res.status(201).json(savedStudent);
     } 
     catch (error) {
-        console.error("Error creating student:", error);  // Log the error details
+        console.error("Error creating student:", error);  
         res.status(500).json({ message: 'Server error', error: error.message || error }); // Return error message
     } 
 };
@@ -36,10 +34,11 @@ export const createStudent = async (req, res) => {
 ////////--------FETCH--------///////
 
 
-  // Fetch all Students data
-// controllers/studentController.js
 
-// Fetch all students
+
+
+
+
 export const getAllStudent = async (req, res) => {
     try {
         const students = await Student.find();
@@ -61,5 +60,34 @@ export const getAllStudent = async (req, res) => {
         res.status(200).json(studentsWithFormattedDate);
     }catch (error) {
         res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
+
+
+///////////////------DELETE  RECORD-------/////////
+
+
+export const deleteStudent = async (req, res) => {
+    const { id } = req.body; 
+    console.log("Received ID:", id); 
+
+    if (!id) {
+        return res.status(400).json({ message: "ID is required" }); 
+    }
+
+    try {
+        const deletedStudent = await Student.findByIdAndDelete(id);
+
+        if (!deletedStudent) {
+            console.log("No student found with this ID."); 
+            return res.status(404).json({ message: "Student not found" }); 
+        }
+
+        res.status(200).json({ message: "Student deleted successfully", deletedStudent });
+    } catch (error) {
+        console.error("Error deleting student:", error); 
+        res.status(500).json({ message: "Server error", error: error.message || error }); 
     }
 };
