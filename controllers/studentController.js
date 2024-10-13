@@ -4,7 +4,7 @@ import moment from 'moment'
 
 export const createStudent = async (req, res) => {
     try {
-        const { name, email, location, phoneno } = req.body;
+        const { name, email, location, phoneno,stream } = req.body;
 
         const existingStudent = await Student.findOne({ email });
         if (existingStudent) {
@@ -14,8 +14,10 @@ export const createStudent = async (req, res) => {
         const newStudent = new Student({
             name,
             email,
+            phoneno,
+            stream,
             location,
-            phoneno
+            
         });
 
         const savedStudent = await newStudent.save();
